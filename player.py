@@ -1,52 +1,57 @@
 from settings import *
-import math
 
 class Player:
     def __init__(self, game):
         self.game = game
         self.x, self.y = PLAYER_POS
         self.angle = PLAYER_ANGLE
-        self.angle_rad = math.radians(self.angle)
 
     def movement(self):
+        sin_a = math.sin(self.angle)
+        cos_a = math.cos(self.angle)
+        dx, dy = 0, 0
         speed = PLAYER_SPEED * self.game.delta_time
+        speed_sin = speed * sin_a
+        speed_cos = speed * cos_a
 
         keys = pg.key.get_pressed()
         if keys[pg.K_w]:
-            if (round(self.angle_rad) == 0):
-                self.x += speed
-            if (round(self.angle_rad) == 3):
-                self.x -= speed
-            if (round(self.angle_rad) == 5):
-                self.y -= speed
-            if  (round(self.angle_rad) == 2):
-                self.y += speed
-
+            dx += speed_cos
+            dy += speed_sin
         if keys[pg.K_s]:
-            if (round(self.angle_rad) == 0):
-                self.x -= speed
-            if (round(self.angle_rad) == 3):
-                self.x += speed
-            if (round(self.angle_rad) == 5) :
-                self.y += speed
-            if (round(self.angle_rad) == 2):
-                self.y -= speed
+            dx += -speed_cos
+            dy += -speed_sin
+        if keys[pg.K_a]:
+            dx += speed_sin
+            dy += -speed_cos
+        if keys[pg.K_d]:
+            dx += -speed_sin
+            dy += speed_cos
 
-    def rotate_left(self):
-        self.angle -= 90
-        self.angle %= 360
-        self.angle_rad = math.radians(self.angle)
+        self.wall_collision(dx, dy)
 
-    def rotate_right(self):
-        self.angle += 90
-        self.angle %= 360
-        self.angle_rad = math.radians(self.angle)
+        if keys[pg.K_LEFT]:
+            self.angle -= PLAYER_ROTATION * self.game.delta_time
+        if keys[pg.K_RIGHT]:
+            self.angle += PLAYER_ROTATION * self.game.delta_time
+        self.angle %= math.tau
+
+    def check_wall(self, x, y):
+        return (x, y) not in self.game.map.world_map
+
+    def wall_collision(self, dx, dy):
+        if self.check_wall(int(self.x + dx), int(self.y)):
+            self.x += dx
+        if self.check_wall(int(self.x), int(self.y + dy)):
+            self.y += dy
+
 
     def draw(self):
         pg.draw.line(self.game.screen, 'red', (self.x * 100, self.y * 100),
-                     (self.x * 100 + WIDTH * math.cos(self.angle_rad), self.y * 100 + HEIGHT * math.sin(self.angle_rad)), 2)
+                     (self.x * 100 + WIDTH * math.cos(self.angle), self.y * 100 + HEIGHT * math.sin(self.angle)), 2)
 
         pg.draw.circle(self.game.screen, 'white', (self.x * 100, self.y * 100), 20)
+
     def update(self):
         self.movement()
     @property

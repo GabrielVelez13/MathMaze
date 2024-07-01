@@ -1,6 +1,7 @@
 from settings import *
-from map import *
-from player import *
+from map import Map
+from player import Player
+from raycasting import Raycasting
 
 
 class Game:
@@ -14,8 +15,10 @@ class Game:
     def new_game(self):
         self.map = Map(self)
         self.player = Player(self)
+        self.raycast = Raycasting(self)
 
     def update(self):
+        self.raycast.update()
         pg.display.flip()
         self.delta_time = self.clock.tick(FPS)
         pg.display.set_caption(f'{self.clock.get_fps() :.2f}')
@@ -23,19 +26,14 @@ class Game:
 
     def draw(self):
         self.screen.fill('black')
-        self.map.draw()
-        self.player.draw()
+        # self.map.draw()
+        # self.player.draw()
 
     def events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 pg.quit()
                 sys.exit()
-            if event.type == pg.KEYDOWN:
-                if event.key == pg.K_a:
-                    self.player.rotate_left()
-                if event.key == pg.K_d:
-                    self.player.rotate_right()
     def run(self):
         while True:
             self.events()
