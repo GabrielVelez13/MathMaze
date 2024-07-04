@@ -10,6 +10,7 @@ class ObjectRenderer:
     def draw(self):
         self.render_objects()
 
+
     def render_objects(self):
         list_of_objects = self.game.raycast.objects_to_render
         for depth, wall_column, wall_pos in  list_of_objects:

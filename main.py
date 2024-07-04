@@ -3,7 +3,7 @@ from map import Map
 from player import Player
 from raycasting import Raycasting
 from object_renderer import ObjectRenderer
-
+from object_handler import ObjectHandler
 
 class Game:
     def __init__(self):
@@ -18,13 +18,15 @@ class Game:
         self.player = Player(self)
         self.object_renderer = ObjectRenderer(self)
         self.raycast = Raycasting(self)
+        self.object_handler = ObjectHandler(self)
 
     def update(self):
+        self.player.update()
         self.raycast.update()
+        self.object_handler.update()
         pg.display.flip()
         self.delta_time = self.clock.tick(FPS)
         pg.display.set_caption(f'{self.clock.get_fps() :.2f}')
-        self.player.update()
 
     def draw(self):
         self.screen.fill('black')
