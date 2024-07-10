@@ -2,7 +2,9 @@ import math
 import pygame as pg
 import sys
 
-
+# Paths
+DEATH_ANIMATION = "Resources/Sprites/Bringer-Of-Death/Individual Sprite/Death/"
+IDLE_ANIMATION = "Resources/Sprites/Bringer-Of-Death/Individual Sprite/Idle/Bringer-of-Death_Idle_1.png"
 # Screen settings
 RES = WIDTH, HEIGHT = 1600, 900
 HALF_WIDTH = WIDTH // 2

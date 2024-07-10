@@ -5,6 +5,7 @@ class Player:
         self.game = game
         self.x, self.y = PLAYER_POS
         self.angle = PLAYER_ANGLE
+        self.moving = True
 
     def movement(self):
         sin_a = math.sin(self.angle)
@@ -47,7 +48,9 @@ class Player:
             self.y += dy
 
     def update(self):
-        self.movement()
+        if self.moving:
+            self.movement()
+
     @property
     def pos(self):
         return self.x, self.y

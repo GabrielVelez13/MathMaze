@@ -8,8 +8,17 @@ class ObjectHandler:
         add_sprite = self.add_sprite
 
 
-        add_sprite(Sprites(game))
-        add_sprite(AnimatedSprite(game))
+        self.setup_sprites()
+
+    def get_sprite_by_identifier(self, identifier):
+        for sprite in self.sprite_list:
+            if sprite.identifier == identifier:
+                return sprite
+        return None
+
+    def setup_sprites(self):
+        self.add_sprite(AnimatedSprite(self.game, "sprite1"))
+
     def update(self):
         [sprite.update() for sprite in self.sprite_list]
 
