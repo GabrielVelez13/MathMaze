@@ -2,9 +2,10 @@ from settings import *
 from collections import deque
 import os
 
+
 class Sprites:
-    def __init__(self, game, identifier, path='Resources/Sprites/Bringer-Of-Death/Individual Sprite/Idle/Bringer-of-Death_Idle_1.png',
-                 pos=(1.5, 1.5), scale=0.7, shift=0.27, health=100):
+    def __init__(self, game, identifier, pos=(1.5, 1.5), path=IDLE_IMAGE,
+                  scale=0.7, shift=0.27, health=100):
         self.game = game
         self.player = game.player
         self.identifier = identifier
@@ -18,7 +19,6 @@ class Sprites:
         self.SPRITE_SCALE = scale
         self.SPRITE_HEIGHT_SHIFT = shift
         self.health = health
-
 
     def get_sprite_projection(self):
         proj = SCREEM_DIST / self.norm_dist * self.SPRITE_SCALE
@@ -70,11 +70,12 @@ class Sprites:
                 # Trigger gameplay if the sprite is visible and the game is not already active
                 if not self.game.game_active:
                     self.game.start_combat(self.identifier)
-
+            else:
+                self.player.moving = True
 
     def rotate_player_to_sprite(self):
         sprite_direction = math.atan2(self.y - self.player.y, self.x - self.player.x)
-        player_angle_normalized = self.player.angle % math.tau
+        player_angle_normalized = self.player.angle % math.tau - .1
         sprite_direction_normalized = sprite_direction % math.tau
         clockwise = (sprite_direction_normalized - player_angle_normalized) % math.tau
         counterclockwise = (player_angle_normalized - sprite_direction_normalized) % math.tau
@@ -83,32 +84,27 @@ class Sprites:
         else:
             self.player.angle -= counterclockwise
 
-
     def update(self):
         self.get_sprite()
 
 
 class AnimatedSprite(Sprites):
-    def __init__(self, game, identifier, path=IDLE_ANIMATION,
-                 pos=(2.5, 3.2), scale=0.8, shift=0.16, health=100, animation_time=120):
-        super().__init__(game, identifier, path, pos, scale, shift, health)
+    def __init__(self, game, identifier,
+                 pos=(1, 1), path=IDLE_ANIMATION, scale=1, shift=0.2, health=100, animation_time=120):
+        super().__init__(game, identifier, pos, path, scale, shift, health)
         self.animation_time = animation_time
         self.path = path.rsplit('/', 1)[0]
         self.images = self.get_images(self.path)
         self.animation_time_prev = pg.time.get_ticks()
         self.animation_trigger = False
         self.health = health
-        self.death = self.get_images(DEATH_ANIMATION)
         self.death_animation_played = False
-
 
     def update(self):
         super().update()
         self.check_animation_time()
         if self.is_alive():
             self.animate(self.images)
-        else:
-            self.animate(self.death)
 
     def animate(self, images):
         if self.animation_trigger:

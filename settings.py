@@ -3,8 +3,8 @@ import pygame as pg
 import sys
 
 # Paths
-DEATH_ANIMATION = "Resources/Sprites/Bringer-Of-Death/Individual Sprite/Death/"
 IDLE_ANIMATION = "Resources/Sprites/Bringer-Of-Death/Individual Sprite/Idle/Bringer-of-Death_Idle_1.png"
+IDLE_IMAGE = "Resources/Sprites/Bringer-Of-Death/Individual Sprite/Idle/Bringer-of-Death_Idle_1.png"
 # Screen settings
 RES = WIDTH, HEIGHT = 1600, 900
 HALF_WIDTH = WIDTH // 2
@@ -25,11 +25,17 @@ NUM_RAYS = WIDTH // 2
 DElTA_ANGLE = FOV / NUM_RAYS
 MAX_DEPTH = 25
 SCREEM_DIST = WIDTH // 2 / math.tan(HALF_FOV)
-SCALE = WIDTH // NUM_RAYS
 DELTA_ANGLE = FOV / NUM_RAYS
 
-#textures
+# textures
 TEXTURE_SIZE = 260
 HALF_TEXTURE_SIZE = TEXTURE_SIZE // 2
 SCREEN_DIST = HALF_WIDTH / math.tan(HALF_FOV)
 SCALE = WIDTH // NUM_RAYS
+
+
+# Mouse
+MOUSE_SENSITIVITY = 0.0001
+MOUSE_MAX_REL = 40
+MOUSE_BORDER_LEFT = 100
+MOUSE_BORDER_RIGHT = WIDTH - MOUSE_BORDER_LEFT

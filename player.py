@@ -1,11 +1,17 @@
 from settings import *
 
+
 class Player:
     def __init__(self, game):
         self.game = game
         self.x, self.y = PLAYER_POS
         self.angle = PLAYER_ANGLE
         self.moving = True
+        self.player_health = 75
+        self.rel = 0
+
+    def is_alive(self):
+        return self.player_health > 0
 
     def movement(self):
         sin_a = math.sin(self.angle)
@@ -37,7 +43,19 @@ class Player:
             self.angle += PLAYER_ROTATION * self.game.delta_time
         self.angle %= math.tau
 
+    def mouse_control(self):
+        mx, my = pg.mouse.get_pos()
+        if mx < MOUSE_BORDER_LEFT or mx > MOUSE_BORDER_RIGHT:
+            pg.mouse.set_pos([HALF_WIDTH, HALF_HEIGHT])
+        self.rel = pg.mouse.get_rel()[0]
+        self.rel = max(-MOUSE_MAX_REL, min(MOUSE_MAX_REL, self.rel))
+        self.angle += self.rel * MOUSE_SENSITIVITY * self.game.delta_time
+
     def check_wall(self, x, y):
+        if (x, y) in self.game.map.world_map:
+            if self.game.map.world_map[(x, y)] == 2:
+                self.game.object_renderer.maze_solved = True
+                return False
         return (x, y) not in self.game.map.world_map
 
     def wall_collision(self, dx, dy):
@@ -49,7 +67,11 @@ class Player:
 
     def update(self):
         if self.moving:
+            self.mouse_control()
             self.movement()
+        if not self.is_alive():
+            self.game.game_active = True
+            self.game.object_renderer.player_lost = True
 
     @property
     def pos(self):

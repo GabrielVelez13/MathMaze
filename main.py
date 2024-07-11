@@ -4,17 +4,16 @@ from player import Player
 from raycasting import Raycasting
 from object_renderer import ObjectRenderer
 from object_handler import ObjectHandler
-from gameplay import Gameplay
 from random import randint
+from sound import Sound
 
 class Game:
     def __init__(self):
         pg.init()
+        pg.mouse.set_visible(False)
         self.screen = pg.display.set_mode(RES)
         self.clock = pg.time.Clock()
         self.delta_time = 0
-        self.player_health = 100
-        self.enemy_health = 100
         self.current_input = ""
         self.question = ""
         self.answer = 0
@@ -28,16 +27,19 @@ class Game:
         self.object_renderer = ObjectRenderer(self)
         self.raycast = Raycasting(self)
         self.object_handler = ObjectHandler(self)
+        self.sound = Sound(self)
+        self.sound.game_sound.play()
 
     def generate_question(self):
-        num1 = randint(1, 10)
-        num2 = randint(1, 10)
-        self.answer = num1 + num2
-        self.question = f"What is {num1} + {num2}?"
+        num1 = randint(1, 12)
+        num2 = randint(1, 12)
+        self.answer = num1 * num2
+        self.question = f"What is {num1} * {num2}?"
         self.game_active = True
+        self.player.moving = False
 
     def draw_text_box(self, text, y):
-        font = pg.font.Font(None, 36)
+        font = pg.font.Font("Resources/Old London font/OldLondon.ttf", 36)
         text_surf = font.render(text, True, pg.Color('white'))
         text_rect = text_surf.get_rect(center=(RES[0] // 2, y))
         pg.draw.rect(self.screen, pg.Color('black'), text_rect.inflate(20, 20), border_radius=5)
@@ -51,13 +53,15 @@ class Game:
     def check_answer(self):
         try:
             if int(self.current_input) == self.answer:
+                self.sound.correct.play()
                 self.sprite_to_modify.health -= 25
                 self.feedback_color = (0, 255, 0, 128)
             else:
-                self.player_health -= 25
+                self.sound.wrong.play()
+                self.player.player_health -= 25
                 self.feedback_color = (255, 0, 0, 128)
-        except:
-            self.player_health -= 25
+        except ValueError:
+            self.player.player_health -= 25
             self.feedback_color = (255, 0, 0, 128)
         self.current_input = ""
         self.game_active = False
@@ -82,15 +86,15 @@ class Game:
         self.object_handler.update()
         pg.display.flip()
         self.delta_time = self.clock.tick(FPS)
-        pg.display.set_caption(f'{self.clock.get_fps() :.2f}')
+        pg.display.set_caption(f'{self.clock.get_fps():.2f}')
 
     def draw(self):
-        self.screen.fill('black')
+        self.screen.fill((30,30,30))
         self.object_renderer.draw()
-        if self.game_active:
+        if self.game_active and self.player.is_alive():
             self.draw_text_box(self.question, RES[1] // 2)
             self.draw_text_box(self.current_input, RES[1] // 2 + 50)
-        if self.feedback_color:
+        if self.feedback_color and self.player.is_alive():
             overlay = pg.Surface(RES)  # Create a transparent surface
             overlay.set_alpha(self.feedback_color[3])  # Set opacity
             overlay.fill(self.feedback_color[:3])  # Fill with the feedback color
