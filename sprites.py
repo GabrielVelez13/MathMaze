@@ -4,8 +4,7 @@ import os
 
 
 class Sprites:
-    def __init__(self, game, identifier, pos=(1.5, 1.5), path=IDLE_IMAGE,
-                  scale=0.7, shift=0.27, health=100):
+    def __init__(self, game, identifier, pos=(1.5, 1.5), path=IDLE_IMAGE, scale=0.7, shift=0.27, health=100):
         self.game = game
         self.player = game.player
         self.identifier = identifier

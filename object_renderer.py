@@ -17,21 +17,14 @@ class ObjectRenderer:
     def load_lose_texture(self):
         return self.get_texture("Resources/Textures/You_lose.png")
 
-    def display_lose_screen(self):
-        screen_width, screen_height = self.screen.get_size()
-        scaled_win_texture = pg.transform.scale(self.lose_texture, (screen_width, screen_height))
-        win_surface = pg.Surface((screen_width, screen_height), pg.SRCALPHA)
-        win_surface.blit(scaled_win_texture, (0, 0))
-        win_surface.set_alpha(self.fade_value)
-        self.screen.blit(win_surface, (0, 0))
-        if self.fade_value < 500:
-            self.fade_value += 5
+
+
     def load_win_texture(self):
         return self.get_texture("Resources/Textures/You_win.png")
 
-    def display_win_screen(self):
+    def display_win_or_lose_screen(self, texture):
         screen_width, screen_height = self.screen.get_size()
-        scaled_win_texture = pg.transform.scale(self.win_texture, (screen_width, screen_height))
+        scaled_win_texture = pg.transform.scale(texture, (screen_width, screen_height))
         win_surface = pg.Surface((screen_width, screen_height), pg.SRCALPHA)
         win_surface.blit(scaled_win_texture, (0, 0))
         win_surface.set_alpha(self.fade_value)
@@ -42,10 +35,10 @@ class ObjectRenderer:
     def draw(self):
         if self.maze_solved:
             self.game.sound.win_sound.play()
-            self.display_win_screen()
+            self.display_win_or_lose_screen(self.win_texture)
         elif self.player_lost:
             self.game.sound.lose_sound.play()
-            self.display_lose_screen()
+            self.display_win_or_lose_screen(self.lose_texture)
         elif self.game.game_active:
             self.screen.fill((30, 30, 30))
             self.render_objects()

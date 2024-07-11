@@ -7,6 +7,7 @@ from object_handler import ObjectHandler
 from random import randint
 from sound import Sound
 
+
 class Game:
     def __init__(self):
         pg.init()
@@ -89,7 +90,7 @@ class Game:
         pg.display.set_caption(f'{self.clock.get_fps():.2f}')
 
     def draw(self):
-        self.screen.fill((30,30,30))
+        self.screen.fill((30, 30, 30))
         self.object_renderer.draw()
         if self.game_active and self.player.is_alive():
             self.draw_text_box(self.question, RES[1] // 2)
