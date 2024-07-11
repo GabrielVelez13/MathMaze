@@ -82,6 +82,7 @@ class Sprites:
             self.player.angle += clockwise
         else:
             self.player.angle -= counterclockwise
+        self.player.moving = False
 
     def update(self):
         self.get_sprite()
