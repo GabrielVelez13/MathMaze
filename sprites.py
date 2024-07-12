@@ -44,7 +44,6 @@ class Sprites:
             test_y += step_dy
             if (int(test_x), int(test_y)) in self.game.map.world_map:
                 return False
-
         return True
 
     def get_sprite(self):
@@ -66,11 +65,13 @@ class Sprites:
             if self.is_visible(dx, dy) and self.is_alive():
                 self.get_sprite_projection()
                 self.rotate_player_to_sprite()
+                self.player.moving = False
                 # Trigger gameplay if the sprite is visible and the game is not already active
                 if not self.game.game_active:
                     self.game.start_combat(self.identifier)
             else:
                 self.player.moving = True
+
 
     def rotate_player_to_sprite(self):
         sprite_direction = math.atan2(self.y - self.player.y, self.x - self.player.x)
@@ -82,6 +83,7 @@ class Sprites:
             self.player.angle += clockwise
         else:
             self.player.angle -= counterclockwise
+        self.player.moving = False
 
     def update(self):
         self.get_sprite()

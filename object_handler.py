@@ -17,8 +17,8 @@ class ObjectHandler:
         self.add_sprite(AnimatedSprite(self.game, "sprite1", (4.4, 7.5)))
         self.add_sprite(AnimatedSprite(self.game, "sprite2", (8.4, 1.5)))
         self.add_sprite(AnimatedSprite(self.game, "sprite3", (8.4, 7.5)))
-        self.add_sprite(AnimatedSprite(self.game, "sprite4", (13.4, 1.5)))
-        self.add_sprite(AnimatedSprite(self.game, "sprite5", (14.4, 4.5)))
+        self.add_sprite(AnimatedSprite(self.game, "sprite4", (11.1, 1)))
+        self.add_sprite(AnimatedSprite(self.game, "sprite5", (14, 1.2)))
 
     def update(self):
         [sprite.update() for sprite in self.sprite_list]
